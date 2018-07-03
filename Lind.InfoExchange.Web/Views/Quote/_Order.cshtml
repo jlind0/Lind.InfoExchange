@@ -1,0 +1,31 @@
+﻿@model Lind.InfoExchange.Web.Models.QuoteModel
+@if (Model.Order != null)
+{
+   <text>
+        <b>Selling:</b>@Model.Order.SellCommodity.CommodityName @@ @string.Format("{0:n0}", Model.Order.SellQuanity)
+        <b>Buying:</b> @Model.Order.BuyCommidity.CommodityName @@ @string.Format("{0:n0}", Model.Order.BuyQuantity)
+        <b>Commission:</b> @Model.Order.CommissionCommodity.CommodityName @@ @string.Format("{0:n0}", Model.Order.Commission)
+        <b>Buy Ratio:</b> @string.Format("{0:n5}", Model.Order.BuyRatio) <b>w/ Commission:</b> @string.Format("{0:n5}", Model.Order.BuyRatioWithCommission)
+        <table>
+            <thead>
+                <tr>
+                    <th>Buy Commodity</th>
+                    <th>Sell Commodity</th>
+                    <th>Buy Quantity</th>
+                    <th>Sell Quantity</th>
+                    <th>Buy Ratio</th>
+                </tr>
+            </thead>
+            @foreach (var leg in Model.Order.OrderLegs)
+            {
+                <tr>
+                    <td>@leg.BuyCommodity.CommodityName</td>
+                    <td>@leg.SellCommodity.CommodityName</td>
+                    <td>@string.Format("{0:n0}", leg.BuyQuantity)</td>
+                    <td>@string.Format("{0:n0}", leg.SellQuantity)</td>
+                    <td>@string.Format("{0:n5}", leg.BuyRatio)</td>
+                </tr>
+            }
+        </table>
+    </text>
+}

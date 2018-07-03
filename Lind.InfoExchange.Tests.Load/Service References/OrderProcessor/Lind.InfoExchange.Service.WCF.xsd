@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/Lind.InfoExchange.Service.WCF" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Lind.InfoExchange.Service.WCF" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="AskDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AllowPartialFill" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ApplyCommissionToBuy" type="xs:boolean" />
+      <xs:element minOccurs="0" name="AskDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="AskID" type="xs:long" />
+      <xs:element minOccurs="0" name="AskQuantity" type="xs:long" />
+      <xs:element minOccurs="0" name="BuyRatio" type="xs:long" />
+      <xs:element minOccurs="0" name="CommodityBuyID" type="xs:int" />
+      <xs:element minOccurs="0" name="CommoditySellID" type="xs:int" />
+      <xs:element minOccurs="0" name="MinBuyQuantity" nillable="true" type="xs:long" />
+      <xs:element minOccurs="0" name="MinSellQuantity" nillable="true" type="xs:long" />
+      <xs:element minOccurs="0" name="SellRatio" type="xs:long" />
+      <xs:element minOccurs="0" name="UserID" type="ser:guid" />
+      <xs:element minOccurs="0" name="ValidToDate" nillable="true" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="AskDTO" nillable="true" type="tns:AskDTO" />
+  <xs:complexType name="OrderDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AskID" type="xs:long" />
+      <xs:element minOccurs="0" name="Commission" type="xs:long" />
+      <xs:element minOccurs="0" name="CommissionCommodityID" type="xs:int" />
+      <xs:element minOccurs="0" name="CommodityBuyID" type="xs:int" />
+      <xs:element minOccurs="0" name="CommoditySellID" type="xs:int" />
+      <xs:element minOccurs="0" name="OrderDate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="OrderID" type="ser:guid" />
+      <xs:element minOccurs="0" name="OrderLegs" nillable="true" type="tns:ArrayOfOrderLegDTO" />
+      <xs:element minOccurs="0" name="UserID" type="ser:guid" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="OrderDTO" nillable="true" type="tns:OrderDTO" />
+  <xs:complexType name="ArrayOfOrderLegDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="OrderLegDTO" nillable="true" type="tns:OrderLegDTO" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfOrderLegDTO" nillable="true" type="tns:ArrayOfOrderLegDTO" />
+  <xs:complexType name="OrderLegDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="BuyQuantity" type="xs:long" />
+      <xs:element minOccurs="0" name="BuyerUserID" type="ser:guid" />
+      <xs:element minOccurs="0" name="Commission" type="xs:long" />
+      <xs:element minOccurs="0" name="CommissionCommodityID" type="xs:int" />
+      <xs:element minOccurs="0" name="CommodityBuyID" type="xs:int" />
+      <xs:element minOccurs="0" name="CommoditySellID" type="xs:int" />
+      <xs:element minOccurs="0" name="OrderID" type="ser:guid" />
+      <xs:element minOccurs="0" name="OrderLegID" type="ser:guid" />
+      <xs:element minOccurs="0" name="SellQuantity" type="xs:long" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="OrderLegDTO" nillable="true" type="tns:OrderLegDTO" />
+  <xs:complexType name="FaultException">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Exception" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="FaultException" nillable="true" type="tns:FaultException" />
+</xs:schema>

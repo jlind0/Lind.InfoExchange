@@ -1,0 +1,46 @@
+﻿@model Lind.InfoExchange.Web.Models.HomeModel
+
+@{
+    ViewBag.Title = "Current Asks";
+}
+
+<h2>Current Asks</h2>
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>Search by Commodity</legend>
+        <div class="editor-label">
+            Commodity:
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.SelectedCommodityID, Model.Commodities)
+        </div>
+        <input type="submit" value="Search" />
+    </fieldset>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Sell Commdoity</th>
+                <th>Buy Commodity</th>
+                <th>Buy Ratio</th>
+                <th>Ask Quantity</th>
+                <th>Allow Partial Fill</th>
+                <th>Ask Date</th>
+                <th>Valid To Date</th>
+            </tr>
+        </thead>
+        @foreach (var ask in Model.Asks)
+        {
+            <tr>
+                <td>@ask.SellCommodity.CommodityName</td>
+                <td>@ask.BuyCommodity.CommodityName</td>
+                <td>@string.Format("{0:n5}", ((double)ask.BuyRatio/(double)ask.SellRatio))</td>
+                <td>@ask.AskQuantity</td>
+                <td>@ask.AllowPartialFill</td>
+                <td>@ask.AskDate.ToString("MM/dd/yyyy hh:mm:ss")</td>
+                <td>@(ask.ValidToDate == null ? "Standing" : ask.ValidToDate.Value.ToString("MM/dd/yyyy hh:mm:ss"))</td>
+            </tr>
+        }
+    </table>
+}

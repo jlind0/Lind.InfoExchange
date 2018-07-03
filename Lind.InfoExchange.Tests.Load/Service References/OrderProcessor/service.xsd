@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/Lind.InfoExchange.Service.WCF" />
+  <xs:element name="ExecuteAsk">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Lind.InfoExchange.Service.WCF" minOccurs="0" name="ask" nillable="true" type="q1:AskDTO" />
+        <xs:element minOccurs="0" name="maxLegDepth" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ExecuteAskResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Lind.InfoExchange.Service.WCF" minOccurs="0" name="ExecuteAskResult" nillable="true" type="q2:OrderDTO" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateAsk">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Lind.InfoExchange.Service.WCF" minOccurs="0" name="ask" nillable="true" type="q3:AskDTO" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UpdateAskResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetQuote">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Lind.InfoExchange.Service.WCF" minOccurs="0" name="ask" nillable="true" type="q4:AskDTO" />
+        <xs:element minOccurs="0" name="maxLegDepth" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetQuoteResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Lind.InfoExchange.Service.WCF" minOccurs="0" name="GetQuoteResult" nillable="true" type="q5:OrderDTO" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetMarketQuote">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Lind.InfoExchange.Service.WCF" minOccurs="0" name="ask" nillable="true" type="q6:AskDTO" />
+        <xs:element minOccurs="0" name="maxLegDepth" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetMarketQuoteResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Lind.InfoExchange.Service.WCF" minOccurs="0" name="GetMarketQuoteResult" nillable="true" type="q7:OrderDTO" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

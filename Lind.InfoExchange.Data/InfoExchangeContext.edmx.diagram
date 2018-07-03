@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="f8210a09dd6d4944b63231f576f2458f" Name="Diagram1">
+        <EntityTypeShape EntityType="InfoExchangeModel.User" Width="1.5" PointX="3.75" PointY="0.75" />
+        <EntityTypeShape EntityType="InfoExchangeModel.Commodity" Width="1.5" PointX="0.75" PointY="8.375" />
+        <EntityTypeShape EntityType="InfoExchangeModel.CommodityPrice" Width="1.5" PointX="3" PointY="18.375" />
+        <EntityTypeShape EntityType="InfoExchangeModel.Order" Width="1.5" PointX="9.375" PointY="4.375" />
+        <AssociationConnector Association="InfoExchangeModel.FK_CommodityPrices_Commodities" />
+        <AssociationConnector Association="InfoExchangeModel.FK_Orders_Commodities3" />
+        <AssociationConnector Association="InfoExchangeModel.FK_Orders_Commodities4" />
+        <AssociationConnector Association="InfoExchangeModel.FK_Orders_Commodities5" />
+        <AssociationConnector Association="InfoExchangeModel.FK_Orders_Users" />
+        <EntityTypeShape EntityType="InfoExchangeModel.OrderLeg" Width="1.5" PointX="11.625" PointY="4.125" />
+        <AssociationConnector Association="InfoExchangeModel.FK_OrderLeg_Commodities3" />
+        <AssociationConnector Association="InfoExchangeModel.FK_OrderLeg_Commodities4" />
+        <AssociationConnector Association="InfoExchangeModel.FK_OrderLeg_Commodities5" />
+        <AssociationConnector Association="InfoExchangeModel.FK_OrderLeg_Orders" />
+        <AssociationConnector Association="InfoExchangeModel.FK_OrderLeg_Users1" />
+        <EntityTypeShape EntityType="InfoExchangeModel.AskLeg" Width="1.5" PointX="8.25" PointY="9.5" />
+        <AssociationConnector Association="InfoExchangeModel.FK_AskLegs_Commodities" />
+        <AssociationConnector Association="InfoExchangeModel.FK_AskLegs_Commodities1" />
+        <EntityTypeShape EntityType="InfoExchangeModel.Ask" Width="1.5" PointX="6" PointY="3.75" />
+        <AssociationConnector Association="InfoExchangeModel.FK_AskLegs_Asks" />
+        <AssociationConnector Association="InfoExchangeModel.FK_Asks_Commodities" />
+        <AssociationConnector Association="InfoExchangeModel.FK_Asks_Commodities1" />
+        <AssociationConnector Association="InfoExchangeModel.FK_BidAsk_Users" />
+        <AssociationConnector Association="InfoExchangeModel.FK_OrderLeg_Asks" />
+        <AssociationConnector Association="InfoExchangeModel.FK_Orders_Asks" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

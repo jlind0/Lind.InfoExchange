@@ -1,0 +1,68 @@
+﻿@model Lind.InfoExchange.Web.Models.QuoteModel
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary()
+    <fieldset>
+        <legend>Enter Ask</legend>
+        <div class="editor-label">
+            Sell Commodity:
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.Ask.CommoditySellID, Model.Commodities)
+        </div>
+        <div class="editor-label">
+            Sell Ratio:
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.Ask.SellRatio)
+        </div>
+        <div class="editor-label">
+            Buy Commodity:
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(m => m.Ask.CommodityBuyID, Model.Commodities)
+        </div>
+        <div class="editor-label">
+            Buy Ratio:
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.Ask.BuyRatio)
+        </div>
+        <div class="editor-label">
+            Ask Quantity:
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(m => m.Ask.AskQuantity)
+        </div>
+        <div class="editor-label">
+            Allow Partial Fills:
+        </div>
+        <div class="editor-field">
+            @Html.CheckBoxFor(m => m.Ask.AllowPartialFill)
+        </div>
+        <div class="editor-label">
+            Apply Commission to Buy:
+        </div>
+        <div class="editor-field">
+            @Html.CheckBoxFor(m => m.Ask.ApplyCommissionToBuy)
+        </div>
+        @if(!Model.IsOrder)
+        {
+            <text>
+            <div class="editor-label">
+                Is Market Quote:
+            </div>
+            <div class="editor-field">
+                @Html.CheckBoxFor(m => m.Ask.IsMarketQuote)
+            </div>
+            <input type="submit" value="Get Quote" />
+            </text>
+        }
+        else
+        { 
+            @:<input type="submit" value="Execute Ask" />
+        }
+       
+    </fieldset>
+}
+

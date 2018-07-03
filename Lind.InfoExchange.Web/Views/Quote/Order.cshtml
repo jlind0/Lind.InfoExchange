@@ -1,0 +1,10 @@
+﻿@model Lind.InfoExchange.Web.Models.QuoteModel
+
+@{
+    ViewBag.Title = "Order";
+}
+
+<h2>Order</h2>
+@Html.Partial("_Ask", Model)
+
+@Html.Partial("_Order", Model)

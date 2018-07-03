@@ -1,0 +1,951 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="InfoExchangeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AskLegs">
+          <Key>
+            <PropertyRef Name="AskLegID" />
+          </Key>
+          <Property Name="AskLegID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AskID" Type="bigint" Nullable="false" />
+          <Property Name="BuyCommodityID" Type="int" />
+          <Property Name="SellCommodityID" Type="int" />
+          <Property Name="BuyRatio" Type="bigint" Nullable="false" />
+          <Property Name="SellRatio" Type="bigint" Nullable="false" />
+          <Property Name="MinBuyQuantity" Type="bigint" />
+          <Property Name="MinSellQuantity" Type="bigint" />
+          <Property Name="ApplyCommissionToBuy" Type="bit" Nullable="false" />
+          <Property Name="AvailableBuyQuantity" Type="bigint" />
+          <Property Name="AvailableSellQuantity" Type="bigint" />
+          <Property Name="StartingBuyQuantity" Type="bigint" />
+          <Property Name="StartingSellQuantity" Type="bigint" />
+        </EntityType>
+        <EntityType Name="Asks">
+          <Key>
+            <PropertyRef Name="AskID" />
+          </Key>
+          <Property Name="AskID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CommoditySellID" Type="int" />
+          <Property Name="CommodityBuyID" Type="int" />
+          <Property Name="SellRatio" Type="bigint" />
+          <Property Name="BuyRatio" Type="bigint" />
+          <Property Name="BuyQuantity" Type="bigint" />
+          <Property Name="SellQuantity" Type="bigint" />
+          <Property Name="AllowPartialFill" Type="bit" Nullable="false" />
+          <Property Name="ApplyCommissionToBuy" Type="bit" Nullable="false" />
+          <Property Name="AskDate" Type="datetime" Nullable="false" />
+          <Property Name="ValidToDate" Type="datetime" />
+          <Property Name="MinBuyQuantity" Type="bigint" />
+          <Property Name="MinSellQuantity" Type="bigint" />
+          <Property Name="StartBuyQuantity" Type="bigint" />
+          <Property Name="StartSellQuantity" Type="bigint" />
+          <Property Name="MaxLegDepth" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Commodities">
+          <Key>
+            <PropertyRef Name="CommodityID" />
+          </Key>
+          <Property Name="CommodityID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CommodityName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Symbol" Type="varchar" MaxLength="5" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CommodityPrices">
+          <Key>
+            <PropertyRef Name="CommodityID" />
+          </Key>
+          <Property Name="CommodityID" Type="int" Nullable="false" />
+          <Property Name="PriceInGold" Type="float" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OrderLeg">
+          <Key>
+            <PropertyRef Name="OrderLegID" />
+          </Key>
+          <Property Name="OrderLegID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="OrderID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BuyerUserID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CommoditySellID" Type="int" Nullable="false" />
+          <Property Name="CommodityBuyID" Type="int" Nullable="false" />
+          <Property Name="SellQuantity" Type="bigint" Nullable="false" />
+          <Property Name="BuyQuantity" Type="bigint" Nullable="false" />
+          <Property Name="CommissionCommdoityID" Type="int" Nullable="false" />
+          <Property Name="Commission" Type="bigint" Nullable="false" />
+          <Property Name="AskID" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="OrderID" />
+          </Key>
+          <Property Name="OrderID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="OrderDate" Type="datetime" Nullable="false" />
+          <Property Name="CommodityBuyID" Type="int" Nullable="false" />
+          <Property Name="CommoditySellID" Type="int" Nullable="false" />
+          <Property Name="CommissionCommodityID" Type="int" Nullable="false" />
+          <Property Name="Commission" Type="bigint" Nullable="false" />
+          <Property Name="AskID" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="900" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_AskLegs_Asks">
+          <End Role="Asks" Type="Self.Asks" Multiplicity="1" />
+          <End Role="AskLegs" Type="Self.AskLegs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Asks">
+              <PropertyRef Name="AskID" />
+            </Principal>
+            <Dependent Role="AskLegs">
+              <PropertyRef Name="AskID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AskLegs_Commodities">
+          <End Role="Commodities" Type="Self.Commodities" Multiplicity="0..1" />
+          <End Role="AskLegs" Type="Self.AskLegs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodities">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="AskLegs">
+              <PropertyRef Name="BuyCommodityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AskLegs_Commodities1">
+          <End Role="Commodities" Type="Self.Commodities" Multiplicity="0..1" />
+          <End Role="AskLegs" Type="Self.AskLegs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodities">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="AskLegs">
+              <PropertyRef Name="SellCommodityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Asks_Commodities">
+          <End Role="Commodities" Type="Self.Commodities" Multiplicity="0..1" />
+          <End Role="Asks" Type="Self.Asks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodities">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="Asks">
+              <PropertyRef Name="CommodityBuyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Asks_Commodities1">
+          <End Role="Commodities" Type="Self.Commodities" Multiplicity="0..1" />
+          <End Role="Asks" Type="Self.Asks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodities">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="Asks">
+              <PropertyRef Name="CommoditySellID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BidAsk_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Asks" Type="Self.Asks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Asks">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CommodityPrices_Commodities">
+          <End Role="Commodities" Type="Self.Commodities" Multiplicity="1" />
+          <End Role="CommodityPrices" Type="Self.CommodityPrices" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Commodities">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="CommodityPrices">
+              <PropertyRef Name="CommodityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderLeg_Asks">
+          <End Role="Asks" Type="Self.Asks" Multiplicity="1" />
+          <End Role="OrderLeg" Type="Self.OrderLeg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Asks">
+              <PropertyRef Name="AskID" />
+            </Principal>
+            <Dependent Role="OrderLeg">
+              <PropertyRef Name="AskID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderLeg_Commodities3">
+          <End Role="Commodities" Type="Self.Commodities" Multiplicity="1" />
+          <End Role="OrderLeg" Type="Self.OrderLeg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodities">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="OrderLeg">
+              <PropertyRef Name="CommoditySellID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderLeg_Commodities4">
+          <End Role="Commodities" Type="Self.Commodities" Multiplicity="1" />
+          <End Role="OrderLeg" Type="Self.OrderLeg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodities">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="OrderLeg">
+              <PropertyRef Name="CommodityBuyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderLeg_Commodities5">
+          <End Role="Commodities" Type="Self.Commodities" Multiplicity="1" />
+          <End Role="OrderLeg" Type="Self.OrderLeg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodities">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="OrderLeg">
+              <PropertyRef Name="CommissionCommdoityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderLeg_Orders">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="1" />
+          <End Role="OrderLeg" Type="Self.OrderLeg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="OrderID" />
+            </Principal>
+            <Dependent Role="OrderLeg">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderLeg_Users1">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="OrderLeg" Type="Self.OrderLeg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="OrderLeg">
+              <PropertyRef Name="BuyerUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Asks">
+          <End Role="Asks" Type="Self.Asks" Multiplicity="1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Asks">
+              <PropertyRef Name="AskID" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="AskID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Commodities3">
+          <End Role="Commodities" Type="Self.Commodities" Multiplicity="1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodities">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="CommissionCommodityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Commodities4">
+          <End Role="Commodities" Type="Self.Commodities" Multiplicity="1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodities">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="CommodityBuyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Commodities5">
+          <End Role="Commodities" Type="Self.Commodities" Multiplicity="1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodities">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="CommoditySellID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="InfoExchangeModelStoreContainer">
+          <EntitySet Name="AskLegs" EntityType="Self.AskLegs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Asks" EntityType="Self.Asks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Commodities" EntityType="Self.Commodities" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CommodityPrices" EntityType="Self.CommodityPrices" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderLeg" EntityType="Self.OrderLeg" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AskLegs_Asks" Association="Self.FK_AskLegs_Asks">
+            <End Role="Asks" EntitySet="Asks" />
+            <End Role="AskLegs" EntitySet="AskLegs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AskLegs_Commodities" Association="Self.FK_AskLegs_Commodities">
+            <End Role="Commodities" EntitySet="Commodities" />
+            <End Role="AskLegs" EntitySet="AskLegs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AskLegs_Commodities1" Association="Self.FK_AskLegs_Commodities1">
+            <End Role="Commodities" EntitySet="Commodities" />
+            <End Role="AskLegs" EntitySet="AskLegs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Asks_Commodities" Association="Self.FK_Asks_Commodities">
+            <End Role="Commodities" EntitySet="Commodities" />
+            <End Role="Asks" EntitySet="Asks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Asks_Commodities1" Association="Self.FK_Asks_Commodities1">
+            <End Role="Commodities" EntitySet="Commodities" />
+            <End Role="Asks" EntitySet="Asks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BidAsk_Users" Association="Self.FK_BidAsk_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Asks" EntitySet="Asks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CommodityPrices_Commodities" Association="Self.FK_CommodityPrices_Commodities">
+            <End Role="Commodities" EntitySet="Commodities" />
+            <End Role="CommodityPrices" EntitySet="CommodityPrices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderLeg_Asks" Association="Self.FK_OrderLeg_Asks">
+            <End Role="Asks" EntitySet="Asks" />
+            <End Role="OrderLeg" EntitySet="OrderLeg" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderLeg_Commodities3" Association="Self.FK_OrderLeg_Commodities3">
+            <End Role="Commodities" EntitySet="Commodities" />
+            <End Role="OrderLeg" EntitySet="OrderLeg" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderLeg_Commodities4" Association="Self.FK_OrderLeg_Commodities4">
+            <End Role="Commodities" EntitySet="Commodities" />
+            <End Role="OrderLeg" EntitySet="OrderLeg" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderLeg_Commodities5" Association="Self.FK_OrderLeg_Commodities5">
+            <End Role="Commodities" EntitySet="Commodities" />
+            <End Role="OrderLeg" EntitySet="OrderLeg" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderLeg_Orders" Association="Self.FK_OrderLeg_Orders">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="OrderLeg" EntitySet="OrderLeg" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderLeg_Users1" Association="Self.FK_OrderLeg_Users1">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="OrderLeg" EntitySet="OrderLeg" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Asks" Association="Self.FK_Orders_Asks">
+            <End Role="Asks" EntitySet="Asks" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Commodities3" Association="Self.FK_Orders_Commodities3">
+            <End Role="Commodities" EntitySet="Commodities" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Commodities4" Association="Self.FK_Orders_Commodities4">
+            <End Role="Commodities" EntitySet="Commodities" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Commodities5" Association="Self.FK_Orders_Commodities5">
+            <End Role="Commodities" EntitySet="Commodities" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Users" Association="Self.FK_Orders_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="InfoExchangeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="InfoExchangeContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Users" EntityType="InfoExchangeModel.User" />
+          <EntitySet Name="Commodities" EntityType="InfoExchangeModel.Commodity" />
+          <EntitySet Name="CommodityPrices" EntityType="InfoExchangeModel.CommodityPrice" />
+          <EntitySet Name="Orders" EntityType="InfoExchangeModel.Order" />
+          <AssociationSet Name="FK_CommodityPrices_Commodities" Association="InfoExchangeModel.FK_CommodityPrices_Commodities">
+            <End Role="Commodity" EntitySet="Commodities" />
+            <End Role="CommodityPrice" EntitySet="CommodityPrices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Commodities3" Association="InfoExchangeModel.FK_Orders_Commodities3">
+            <End Role="Commodity" EntitySet="Commodities" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Commodities4" Association="InfoExchangeModel.FK_Orders_Commodities4">
+            <End Role="Commodity" EntitySet="Commodities" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Commodities5" Association="InfoExchangeModel.FK_Orders_Commodities5">
+            <End Role="Commodity" EntitySet="Commodities" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Users" Association="InfoExchangeModel.FK_Orders_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+          <EntitySet Name="OrderLegs" EntityType="InfoExchangeModel.OrderLeg" />
+          <AssociationSet Name="FK_OrderLeg_Commodities3" Association="InfoExchangeModel.FK_OrderLeg_Commodities3">
+            <End Role="Commodity" EntitySet="Commodities" />
+            <End Role="OrderLeg" EntitySet="OrderLegs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderLeg_Commodities4" Association="InfoExchangeModel.FK_OrderLeg_Commodities4">
+            <End Role="Commodity" EntitySet="Commodities" />
+            <End Role="OrderLeg" EntitySet="OrderLegs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderLeg_Commodities5" Association="InfoExchangeModel.FK_OrderLeg_Commodities5">
+            <End Role="Commodity" EntitySet="Commodities" />
+            <End Role="OrderLeg" EntitySet="OrderLegs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderLeg_Orders" Association="InfoExchangeModel.FK_OrderLeg_Orders">
+            <End Role="Order" EntitySet="Orders" />
+            <End Role="OrderLeg" EntitySet="OrderLegs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderLeg_Users1" Association="InfoExchangeModel.FK_OrderLeg_Users1">
+            <End Role="User" EntitySet="Users" />
+            <End Role="OrderLeg" EntitySet="OrderLegs" />
+          </AssociationSet>
+          <EntitySet Name="AskLegs" EntityType="InfoExchangeModel.AskLeg" />
+          <AssociationSet Name="FK_AskLegs_Commodities" Association="InfoExchangeModel.FK_AskLegs_Commodities">
+            <End Role="Commodity" EntitySet="Commodities" />
+            <End Role="AskLeg" EntitySet="AskLegs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AskLegs_Commodities1" Association="InfoExchangeModel.FK_AskLegs_Commodities1">
+            <End Role="Commodity" EntitySet="Commodities" />
+            <End Role="AskLeg" EntitySet="AskLegs" />
+          </AssociationSet>
+          <EntitySet Name="Asks" EntityType="InfoExchangeModel.Ask" />
+          <AssociationSet Name="FK_AskLegs_Asks" Association="InfoExchangeModel.FK_AskLegs_Asks">
+            <End Role="Ask" EntitySet="Asks" />
+            <End Role="AskLeg" EntitySet="AskLegs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Asks_Commodities" Association="InfoExchangeModel.FK_Asks_Commodities">
+            <End Role="Commodity" EntitySet="Commodities" />
+            <End Role="Ask" EntitySet="Asks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Asks_Commodities1" Association="InfoExchangeModel.FK_Asks_Commodities1">
+            <End Role="Commodity" EntitySet="Commodities" />
+            <End Role="Ask" EntitySet="Asks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BidAsk_Users" Association="InfoExchangeModel.FK_BidAsk_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Ask" EntitySet="Asks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderLeg_Asks" Association="InfoExchangeModel.FK_OrderLeg_Asks">
+            <End Role="Ask" EntitySet="Asks" />
+            <End Role="OrderLeg" EntitySet="OrderLegs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Asks" Association="InfoExchangeModel.FK_Orders_Asks">
+            <End Role="Ask" EntitySet="Asks" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Guid" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="900" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Orders" Relationship="InfoExchangeModel.FK_Orders_Users" FromRole="User" ToRole="Order" />
+          <NavigationProperty Name="OrderLegs" Relationship="InfoExchangeModel.FK_OrderLeg_Users1" FromRole="User" ToRole="OrderLeg" />
+          <NavigationProperty Name="Asks" Relationship="InfoExchangeModel.FK_BidAsk_Users" FromRole="User" ToRole="Ask" />
+        </EntityType>
+        <EntityType Name="Commodity">
+          <Key>
+            <PropertyRef Name="CommodityID" />
+          </Key>
+          <Property Name="CommodityID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CommodityName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Symbol" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="CommodityPrice" Relationship="InfoExchangeModel.FK_CommodityPrices_Commodities" FromRole="Commodity" ToRole="CommodityPrice" />
+          <NavigationProperty Name="CommissionOrders" Relationship="InfoExchangeModel.FK_Orders_Commodities3" FromRole="Commodity" ToRole="Order" />
+          <NavigationProperty Name="BuyOrders" Relationship="InfoExchangeModel.FK_Orders_Commodities4" FromRole="Commodity" ToRole="Order" />
+          <NavigationProperty Name="SellOrders" Relationship="InfoExchangeModel.FK_Orders_Commodities5" FromRole="Commodity" ToRole="Order" />
+          <NavigationProperty Name="SellOrderLegs" Relationship="InfoExchangeModel.FK_OrderLeg_Commodities3" FromRole="Commodity" ToRole="OrderLeg" />
+          <NavigationProperty Name="BuyOrderLegs" Relationship="InfoExchangeModel.FK_OrderLeg_Commodities4" FromRole="Commodity" ToRole="OrderLeg" />
+          <NavigationProperty Name="CommissionOrderLegs" Relationship="InfoExchangeModel.FK_OrderLeg_Commodities5" FromRole="Commodity" ToRole="OrderLeg" />
+          <NavigationProperty Name="AskLegs" Relationship="InfoExchangeModel.FK_AskLegs_Commodities" FromRole="Commodity" ToRole="AskLeg" />
+          <NavigationProperty Name="AskLegs1" Relationship="InfoExchangeModel.FK_AskLegs_Commodities1" FromRole="Commodity" ToRole="AskLeg" />
+          <NavigationProperty Name="Asks" Relationship="InfoExchangeModel.FK_Asks_Commodities" FromRole="Commodity" ToRole="Ask" />
+          <NavigationProperty Name="Asks1" Relationship="InfoExchangeModel.FK_Asks_Commodities1" FromRole="Commodity" ToRole="Ask" />
+        </EntityType>
+        <EntityType Name="CommodityPrice">
+          <Key>
+            <PropertyRef Name="CommodityID" />
+          </Key>
+          <Property Name="CommodityID" Type="Int32" Nullable="false" />
+          <Property Name="PriceInGold" Type="Double" Nullable="false" />
+          <NavigationProperty Name="Commodity" Relationship="InfoExchangeModel.FK_CommodityPrices_Commodities" FromRole="CommodityPrice" ToRole="Commodity" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="OrderID" />
+          </Key>
+          <Property Name="OrderID" Type="Guid" Nullable="false" />
+          <Property Name="UserID" Type="Guid" Nullable="false" />
+          <Property Name="OrderDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CommodityBuyID" Type="Int32" Nullable="false" />
+          <Property Name="CommoditySellID" Type="Int32" Nullable="false" />
+          <Property Name="CommissionCommodityID" Type="Int32" Nullable="false" />
+          <Property Name="Commission" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="CommissionCommodity" Relationship="InfoExchangeModel.FK_Orders_Commodities3" FromRole="Order" ToRole="Commodity" />
+          <NavigationProperty Name="BuyCommodity" Relationship="InfoExchangeModel.FK_Orders_Commodities4" FromRole="Order" ToRole="Commodity" />
+          <NavigationProperty Name="SellCommdoity" Relationship="InfoExchangeModel.FK_Orders_Commodities5" FromRole="Order" ToRole="Commodity" />
+          <NavigationProperty Name="User" Relationship="InfoExchangeModel.FK_Orders_Users" FromRole="Order" ToRole="User" />
+          <NavigationProperty Name="OrderLegs" Relationship="InfoExchangeModel.FK_OrderLeg_Orders" FromRole="Order" ToRole="OrderLeg" />
+          <Property Name="AskID" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="Ask" Relationship="InfoExchangeModel.FK_Orders_Asks" FromRole="Order" ToRole="Ask" />
+        </EntityType>
+        <Association Name="FK_CommodityPrices_Commodities">
+          <End Type="InfoExchangeModel.Commodity" Role="Commodity" Multiplicity="1" />
+          <End Type="InfoExchangeModel.CommodityPrice" Role="CommodityPrice" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Commodity">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="CommodityPrice">
+              <PropertyRef Name="CommodityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Commodities3">
+          <End Type="InfoExchangeModel.Commodity" Role="Commodity" Multiplicity="1" />
+          <End Type="InfoExchangeModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodity">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="CommissionCommodityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Commodities4">
+          <End Type="InfoExchangeModel.Commodity" Role="Commodity" Multiplicity="1" />
+          <End Type="InfoExchangeModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodity">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="CommodityBuyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Commodities5">
+          <End Type="InfoExchangeModel.Commodity" Role="Commodity" Multiplicity="1" />
+          <End Type="InfoExchangeModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodity">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="CommoditySellID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Users">
+          <End Type="InfoExchangeModel.User" Role="User" Multiplicity="1" />
+          <End Type="InfoExchangeModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="OrderLeg">
+          <Key>
+            <PropertyRef Name="OrderLegID" />
+          </Key>
+          <Property Name="OrderLegID" Type="Guid" Nullable="false" />
+          <Property Name="OrderID" Type="Guid" Nullable="false" />
+          <Property Name="BuyerUserID" Type="Guid" Nullable="false" />
+          <Property Name="CommoditySellID" Type="Int32" Nullable="false" />
+          <Property Name="CommodityBuyID" Type="Int32" Nullable="false" />
+          <Property Name="SellQuantity" Type="Int64" Nullable="false" />
+          <Property Name="BuyQuantity" Type="Int64" Nullable="false" />
+          <Property Name="CommissionCommodityID" Type="Int32" Nullable="false" />
+          <Property Name="Commission" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="SellCommodity" Relationship="InfoExchangeModel.FK_OrderLeg_Commodities3" FromRole="OrderLeg" ToRole="Commodity" />
+          <NavigationProperty Name="BuyCommodity" Relationship="InfoExchangeModel.FK_OrderLeg_Commodities4" FromRole="OrderLeg" ToRole="Commodity" />
+          <NavigationProperty Name="CommisionCommodity" Relationship="InfoExchangeModel.FK_OrderLeg_Commodities5" FromRole="OrderLeg" ToRole="Commodity" />
+          <NavigationProperty Name="Order" Relationship="InfoExchangeModel.FK_OrderLeg_Orders" FromRole="OrderLeg" ToRole="Order" />
+          <NavigationProperty Name="User" Relationship="InfoExchangeModel.FK_OrderLeg_Users1" FromRole="OrderLeg" ToRole="User" />
+          <Property Name="AskID" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="Ask" Relationship="InfoExchangeModel.FK_OrderLeg_Asks" FromRole="OrderLeg" ToRole="Ask" />
+        </EntityType>
+        <Association Name="FK_OrderLeg_Commodities3">
+          <End Type="InfoExchangeModel.Commodity" Role="Commodity" Multiplicity="1" />
+          <End Type="InfoExchangeModel.OrderLeg" Role="OrderLeg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodity">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="OrderLeg">
+              <PropertyRef Name="CommoditySellID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderLeg_Commodities4">
+          <End Type="InfoExchangeModel.Commodity" Role="Commodity" Multiplicity="1" />
+          <End Type="InfoExchangeModel.OrderLeg" Role="OrderLeg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodity">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="OrderLeg">
+              <PropertyRef Name="CommodityBuyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderLeg_Commodities5">
+          <End Type="InfoExchangeModel.Commodity" Role="Commodity" Multiplicity="1" />
+          <End Type="InfoExchangeModel.OrderLeg" Role="OrderLeg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodity">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="OrderLeg">
+              <PropertyRef Name="CommissionCommodityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderLeg_Orders">
+          <End Type="InfoExchangeModel.Order" Role="Order" Multiplicity="1" />
+          <End Type="InfoExchangeModel.OrderLeg" Role="OrderLeg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="OrderID" />
+            </Principal>
+            <Dependent Role="OrderLeg">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderLeg_Users1">
+          <End Type="InfoExchangeModel.User" Role="User" Multiplicity="1" />
+          <End Type="InfoExchangeModel.OrderLeg" Role="OrderLeg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="OrderLeg">
+              <PropertyRef Name="BuyerUserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AskLeg">
+          <Key>
+            <PropertyRef Name="AskLegID" />
+          </Key>
+          <Property Name="AskLegID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AskID" Type="Int64" Nullable="false" />
+          <Property Name="BuyCommodityID" Type="Int32" />
+          <Property Name="SellCommodityID" Type="Int32" />
+          <Property Name="BuyRatio" Type="Int64" Nullable="false" />
+          <Property Name="SellRatio" Type="Int64" Nullable="false" />
+          <Property Name="MinBuyQuantity" Type="Int64" />
+          <Property Name="MinSellQuantity" Type="Int64" />
+          <Property Name="ApplyCommissionToBuy" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CommodityBuy" Relationship="InfoExchangeModel.FK_AskLegs_Commodities" FromRole="AskLeg" ToRole="Commodity" />
+          <NavigationProperty Name="CommoditySell" Relationship="InfoExchangeModel.FK_AskLegs_Commodities1" FromRole="AskLeg" ToRole="Commodity" />
+          <NavigationProperty Name="Ask" Relationship="InfoExchangeModel.FK_AskLegs_Asks" FromRole="AskLeg" ToRole="Ask" />
+          <Property Name="AvailableBuyQuantity" Type="Int64" />
+          <Property Name="AvailableSellQuantity" Type="Int64" />
+          <Property Name="StartingBuyQuantity" Type="Int64" />
+          <Property Name="StartingSellQuantity" Type="Int64" />
+        </EntityType>
+        <Association Name="FK_AskLegs_Commodities">
+          <End Type="InfoExchangeModel.Commodity" Role="Commodity" Multiplicity="0..1" />
+          <End Type="InfoExchangeModel.AskLeg" Role="AskLeg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodity">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="AskLeg">
+              <PropertyRef Name="BuyCommodityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AskLegs_Commodities1">
+          <End Type="InfoExchangeModel.Commodity" Role="Commodity" Multiplicity="0..1" />
+          <End Type="InfoExchangeModel.AskLeg" Role="AskLeg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodity">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="AskLeg">
+              <PropertyRef Name="SellCommodityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Ask">
+          <Key>
+            <PropertyRef Name="AskID" />
+          </Key>
+          <Property Name="AskID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Guid" Nullable="false" />
+          <Property Name="CommoditySellID" Type="Int32" />
+          <Property Name="CommodityBuyID" Type="Int32" />
+          <Property Name="SellRatio" Type="Int64" />
+          <Property Name="BuyRatio" Type="Int64" />
+          <Property Name="BuyQuantity" Type="Int64" />
+          <Property Name="SellQuantity" Type="Int64" />
+          <Property Name="AllowPartialFill" Type="Boolean" Nullable="false" />
+          <Property Name="ApplyCommissionToBuy" Type="Boolean" Nullable="false" />
+          <Property Name="AskDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ValidToDate" Type="DateTime" Precision="3" />
+          <Property Name="MinBuyQuantity" Type="Int64" />
+          <Property Name="MinSellQuantity" Type="Int64" />
+          <Property Name="StartBuyQuantity" Type="Int64" />
+          <Property Name="StartSellQuantity" Type="Int64" />
+          <NavigationProperty Name="AskLegs" Relationship="InfoExchangeModel.FK_AskLegs_Asks" FromRole="Ask" ToRole="AskLeg" />
+          <NavigationProperty Name="CommodityBuy" Relationship="InfoExchangeModel.FK_Asks_Commodities" FromRole="Ask" ToRole="Commodity" />
+          <NavigationProperty Name="CommoditySell" Relationship="InfoExchangeModel.FK_Asks_Commodities1" FromRole="Ask" ToRole="Commodity" />
+          <NavigationProperty Name="User" Relationship="InfoExchangeModel.FK_BidAsk_Users" FromRole="Ask" ToRole="User" />
+          <NavigationProperty Name="OrderLegs" Relationship="InfoExchangeModel.FK_OrderLeg_Asks" FromRole="Ask" ToRole="OrderLeg" />
+          <NavigationProperty Name="Orders" Relationship="InfoExchangeModel.FK_Orders_Asks" FromRole="Ask" ToRole="Order" />
+          <Property Name="MaxLegDepth" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_AskLegs_Asks">
+          <End Type="InfoExchangeModel.Ask" Role="Ask" Multiplicity="1" />
+          <End Type="InfoExchangeModel.AskLeg" Role="AskLeg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ask">
+              <PropertyRef Name="AskID" />
+            </Principal>
+            <Dependent Role="AskLeg">
+              <PropertyRef Name="AskID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Asks_Commodities">
+          <End Type="InfoExchangeModel.Commodity" Role="Commodity" Multiplicity="0..1" />
+          <End Type="InfoExchangeModel.Ask" Role="Ask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodity">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="Ask">
+              <PropertyRef Name="CommodityBuyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Asks_Commodities1">
+          <End Type="InfoExchangeModel.Commodity" Role="Commodity" Multiplicity="0..1" />
+          <End Type="InfoExchangeModel.Ask" Role="Ask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Commodity">
+              <PropertyRef Name="CommodityID" />
+            </Principal>
+            <Dependent Role="Ask">
+              <PropertyRef Name="CommoditySellID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BidAsk_Users">
+          <End Type="InfoExchangeModel.User" Role="User" Multiplicity="1" />
+          <End Type="InfoExchangeModel.Ask" Role="Ask" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Ask">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderLeg_Asks">
+          <End Type="InfoExchangeModel.Ask" Role="Ask" Multiplicity="1" />
+          <End Type="InfoExchangeModel.OrderLeg" Role="OrderLeg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ask">
+              <PropertyRef Name="AskID" />
+            </Principal>
+            <Dependent Role="OrderLeg">
+              <PropertyRef Name="AskID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Asks">
+          <End Type="InfoExchangeModel.Ask" Role="Ask" Multiplicity="1" />
+          <End Type="InfoExchangeModel.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ask">
+              <PropertyRef Name="AskID" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="AskID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="InfoExchangeModelStoreContainer" CdmEntityContainer="InfoExchangeContext">
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="InfoExchangeModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Commodities">
+            <EntityTypeMapping TypeName="InfoExchangeModel.Commodity">
+              <MappingFragment StoreEntitySet="Commodities">
+                <ScalarProperty Name="Symbol" ColumnName="Symbol" />
+                <ScalarProperty Name="CommodityName" ColumnName="CommodityName" />
+                <ScalarProperty Name="CommodityID" ColumnName="CommodityID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CommodityPrices">
+            <EntityTypeMapping TypeName="InfoExchangeModel.CommodityPrice">
+              <MappingFragment StoreEntitySet="CommodityPrices">
+                <ScalarProperty Name="PriceInGold" ColumnName="PriceInGold" />
+                <ScalarProperty Name="CommodityID" ColumnName="CommodityID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="InfoExchangeModel.Order">
+              <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="AskID" ColumnName="AskID" />
+                <ScalarProperty Name="Commission" ColumnName="Commission" />
+                <ScalarProperty Name="CommissionCommodityID" ColumnName="CommissionCommodityID" />
+                <ScalarProperty Name="CommoditySellID" ColumnName="CommoditySellID" />
+                <ScalarProperty Name="CommodityBuyID" ColumnName="CommodityBuyID" />
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderLegs">
+            <EntityTypeMapping TypeName="InfoExchangeModel.OrderLeg">
+              <MappingFragment StoreEntitySet="OrderLeg">
+                <ScalarProperty Name="AskID" ColumnName="AskID" />
+                <ScalarProperty Name="Commission" ColumnName="Commission" />
+                <ScalarProperty Name="CommissionCommodityID" ColumnName="CommissionCommdoityID" />
+                <ScalarProperty Name="BuyQuantity" ColumnName="BuyQuantity" />
+                <ScalarProperty Name="SellQuantity" ColumnName="SellQuantity" />
+                <ScalarProperty Name="CommodityBuyID" ColumnName="CommodityBuyID" />
+                <ScalarProperty Name="CommoditySellID" ColumnName="CommoditySellID" />
+                <ScalarProperty Name="BuyerUserID" ColumnName="BuyerUserID" />
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="OrderLegID" ColumnName="OrderLegID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AskLegs">
+            <EntityTypeMapping TypeName="InfoExchangeModel.AskLeg">
+              <MappingFragment StoreEntitySet="AskLegs">
+                <ScalarProperty Name="StartingSellQuantity" ColumnName="StartingSellQuantity" />
+                <ScalarProperty Name="StartingBuyQuantity" ColumnName="StartingBuyQuantity" />
+                <ScalarProperty Name="AvailableSellQuantity" ColumnName="AvailableSellQuantity" />
+                <ScalarProperty Name="AvailableBuyQuantity" ColumnName="AvailableBuyQuantity" />
+                <ScalarProperty Name="ApplyCommissionToBuy" ColumnName="ApplyCommissionToBuy" />
+                <ScalarProperty Name="MinSellQuantity" ColumnName="MinSellQuantity" />
+                <ScalarProperty Name="MinBuyQuantity" ColumnName="MinBuyQuantity" />
+                <ScalarProperty Name="SellRatio" ColumnName="SellRatio" />
+                <ScalarProperty Name="BuyRatio" ColumnName="BuyRatio" />
+                <ScalarProperty Name="SellCommodityID" ColumnName="SellCommodityID" />
+                <ScalarProperty Name="BuyCommodityID" ColumnName="BuyCommodityID" />
+                <ScalarProperty Name="AskID" ColumnName="AskID" />
+                <ScalarProperty Name="AskLegID" ColumnName="AskLegID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Asks">
+            <EntityTypeMapping TypeName="InfoExchangeModel.Ask">
+              <MappingFragment StoreEntitySet="Asks">
+                <ScalarProperty Name="MaxLegDepth" ColumnName="MaxLegDepth" />
+                <ScalarProperty Name="StartSellQuantity" ColumnName="StartSellQuantity" />
+                <ScalarProperty Name="StartBuyQuantity" ColumnName="StartBuyQuantity" />
+                <ScalarProperty Name="MinSellQuantity" ColumnName="MinSellQuantity" />
+                <ScalarProperty Name="MinBuyQuantity" ColumnName="MinBuyQuantity" />
+                <ScalarProperty Name="ValidToDate" ColumnName="ValidToDate" />
+                <ScalarProperty Name="AskDate" ColumnName="AskDate" />
+                <ScalarProperty Name="ApplyCommissionToBuy" ColumnName="ApplyCommissionToBuy" />
+                <ScalarProperty Name="AllowPartialFill" ColumnName="AllowPartialFill" />
+                <ScalarProperty Name="SellQuantity" ColumnName="SellQuantity" />
+                <ScalarProperty Name="BuyQuantity" ColumnName="BuyQuantity" />
+                <ScalarProperty Name="BuyRatio" ColumnName="BuyRatio" />
+                <ScalarProperty Name="SellRatio" ColumnName="SellRatio" />
+                <ScalarProperty Name="CommodityBuyID" ColumnName="CommodityBuyID" />
+                <ScalarProperty Name="CommoditySellID" ColumnName="CommoditySellID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="AskID" ColumnName="AskID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
